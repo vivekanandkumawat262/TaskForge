@@ -1,52 +1,91 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
 
-function Register() {
+const Register = () => {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "user"
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
-      await registerUser(form);
-      navigate("/");
+      await registerUser({ name, email, password });
+      navigate("/login");
     } catch (err) {
-      alert(err.message || "Registration failed");
+      setError(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <input
-        placeholder="Name"
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-      />
-      <input
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
-      <select
-        onChange={(e) => setForm({ ...form, role: e.target.value })}
+    <div className="min-h-screen min-w-screen flex items-center justify-center bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-lg shadow-md w-80"
       >
-        <option value="user">User</option>
-        <option value="manager">Manager</option>
-        <option value="admin">Admin</option>
-      </select>
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          Register
+        </h2>
 
-      <button onClick={handleSubmit}>Register</button>
+        {error && (
+          <p className="text-red-500 text-sm mb-4 text-center">
+            {error}
+          </p>
+        )}
+
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="w-full text-gray-800 px-3 py-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full text-gray-800 px-3 py-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full text-gray-800 px-3 py-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition disabled:opacity-60"
+        >
+          {loading ? "Creating account..." : "Register"}
+        </button>
+
+        <p className="text-center text-sm mt-4 text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-green-600 hover:underline">
+            Login
+          </Link>
+        </p>
+      </form>
     </div>
   );
-}
+};
 
 export default Register;

@@ -41,7 +41,9 @@ export const loginUser = async (email, password) => {
 export const getCurrentUser = async () => {
   try {
     const res = await api.get("/auth/me");
+    console.log(res.data)
     return res.data;
+
   } catch (err) {
     throw err;
   }
@@ -50,6 +52,6 @@ export const getCurrentUser = async () => {
 /**
  * Logout user
  */
-export const logoutUser = () => {
+export const logout = () => {
   setAuthToken(null);
 };
