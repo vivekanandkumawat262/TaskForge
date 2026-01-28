@@ -1,8 +1,11 @@
  
 from fastapi import FastAPI
 from  app.api.auth.auth_routes import router as auth_router
+from app.api.tasks.task_routes import router as task_router
+from app.api.projects.project_routes import router as project_router
+
 from app.db.database import Base, engine
-from app.models import user   # IMPORTANT
+from app.models import  user, project, task, activity_log, refresh_token   # IMPORTANT
 from app.db.session import SessionLocal
 from app.core.init_admin import create_admin_if_not_exists
 from dotenv import load_dotenv
@@ -43,3 +46,5 @@ def startup_event():
         db.close()
 
 app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
+app.include_router(task_router,prefix="/api/tasks",tags=["Tasks"])
+app.include_router(project_router,prefix="/api/projects",tags=["Projects"])
