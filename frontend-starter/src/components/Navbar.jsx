@@ -11,29 +11,86 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={styles.navbar}>
-      <h2 style={styles.logo}>TaskForge</h2>
+    <nav className="h-16 bg-gray-900 text-white flex items-center justify-between px-8 shadow-md">
+      {/* ================= Logo ================= */}
+      <h2
+        className="text-xl font-bold tracking-wide cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        TaskForge
+      </h2>
 
-      <div style={styles.links}>
-        <Link to="/" style={styles.link}>Home</Link>
+      {/* ================= Navigation ================= */}
+      <div className="flex items-center gap-6">
+        <Link
+          to="/user/userDashboard"
+          className="text-sm font-medium text-gray-300 hover:text-white transition"
+        >
+          Home
+        </Link>
 
         {!isAuth && (
           <>
-            <Link to="/login" style={styles.link}>Login</Link>
-            <Link to="/register" style={styles.link}>Register</Link>
+            <Link
+              to="/login"
+              className="text-sm font-medium text-gray-300 hover:text-white transition"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              className="text-sm font-medium text-gray-300 hover:text-white transition"
+            >
+              Register
+            </Link>
           </>
         )}
 
+        {/* ---------------- User Links ---------------- */}
         {isAuth && user?.role === "user" && (
-          <Link to="/user" style={styles.link}>Dashboard</Link>
+          <>
+            <Link
+              to="/user"
+              className=" transition"
+            >
+              Dashboard
+            </Link>
+
+            <button
+              onClick={() => navigate("/user/profile")}
+              className="text-sm font-medium text-gray-300 hover:text-indigo-400 transition"
+            >
+              Profile
+            </button>
+          </>
         )}
 
+        {/* ---------------- Admin Links ---------------- */}
         {isAuth && user?.role === "admin" && (
-          <Link to="/admin" style={styles.link}>Admin</Link>
+          <>
+          <Link
+            to="/admin"
+            className="text-sm font-medium text-gray-300 hover:text-indigo-400 transition"
+          >
+            Admin
+          </Link>
+
+          <button
+              onClick={() => navigate("/admin/profile")}
+              className="text-sm font-medium text-gray-300 hover:text-indigo-400 transition"
+            >
+              Profile
+            </button>
+          </>
         )}
 
+        {/* ---------------- Logout ---------------- */}
         {isAuth && (
-          <button onClick={handleLogout} style={styles.logoutBtn}>
+          <button
+            onClick={handleLogout}
+            className="ml-4 rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition"
+          >
             Logout
           </button>
         )}
@@ -43,37 +100,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-/* ---------------- styles ---------------- */
-
-const styles = {
-  navbar: {
-    height: "60px",
-    background: "#1e1e2f",
-    color: "#fff",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "0 30px",
-  },
-  logo: {
-    margin: 0,
-  },
-  links: {
-    display: "flex",
-    alignItems: "center",
-    gap: "20px",
-  },
-  link: {
-    color: "#fff",
-    textDecoration: "none",
-  },
-  logoutBtn: {
-    background: "#e74c3c",
-    border: "none",
-    color: "#fff",
-    padding: "6px 12px",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-};

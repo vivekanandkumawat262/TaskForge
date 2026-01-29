@@ -48,6 +48,7 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=TokenResponse)
 def login_user(login_data: UserLogin, db: Session = Depends(get_db)):
+    print("ADMIN DEPENDENCY HIT")
     user = db.query(User).filter(User.email == login_data.email).first()
 
     if not user or not verify_password(login_data.password, user.password):

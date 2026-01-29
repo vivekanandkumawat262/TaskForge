@@ -1,18 +1,16 @@
 import api from "./apiClient";
-
 /**
- * Get all tasks with pagination & filters
- * @param {Object} params - { page, limit, status, priority, search }
- * @returns {Object} { tasks, total, page, limit }
+ * Get tasks for a project (supports search)
  */
-export const getTasks = async (params = {}) => {
-    try {
-        const res = await api.get("/tasks", { params });
-        return res.data;
-    } catch (err) {
-        throw err;
-    }
+export const getTasksByProject = async (projectId, params = {}) => {
+  const res = await api.get(
+    `/projects/${projectId}/tasks`,
+    { params }
+  );
+  return res.data;
 };
+
+ 
 
 /**
  * Get a single task by ID
@@ -28,14 +26,15 @@ export const getTaskById = async (taskId) => {
     }
 };
 
+
 /**
  * Create a new task (Manager/Admin only)
  * @param {Object} taskData
  * @returns {Object} created task
  */
-export const createTask = async (taskData) => {
+export const createTask = async (projectId,taskData) => {
     try {
-        const res = await api.post("/tasks", taskData);
+        const res = await api.post(`/projects/${projectId}/tasks`, taskData);
         return res.data;
     } catch (err) {
         throw err;
@@ -72,6 +71,8 @@ export const updateTaskStatus = async (taskId, status) => {
     }
 };
 
+ 
+
 /**
  * Delete a task (Admin only)
  * @param {String} taskId
@@ -84,4 +85,23 @@ export const deleteTask = async (taskId) => {
     } catch (err) {
         throw err;
     }
+};
+ 
+
+/**
+ * Assign task to a user (Admin only)
+ */
+export const assignTask = async (taskId, userId) => {
+  const res = await api.patch(`/tasks/${taskId}/assign`, {
+    user_id: userId,
+  });
+  return res.data;
+};
+/**
+ * Get all users (Admin only)
+ */
+export const getAllUsers = async () => {
+  const res = await api.get("/admin/users");
+  console.log(res.data)
+  return res.data;
 };

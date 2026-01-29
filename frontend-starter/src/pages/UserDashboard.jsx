@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet,Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
 /* -------------------- User Dashboard -------------------- */
@@ -26,15 +26,12 @@ const UserDashboard = () => {
     <div className="min-w-screen min-h-screen bg-gray-100 p-6">
       {/* Page Container */}
       <div className="max-w-5xl mx-auto">
-        
         {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-gray-800">
             Welcome, {user.name} 👋
           </h1>
-          <p className="text-gray-600 mt-2">
-            Here’s your personal dashboard
-          </p>
+          <p className="text-gray-600 mt-2">Here’s your personal dashboard</p>
         </div>
 
         {/* Profile Card */}
@@ -75,6 +72,26 @@ const UserDashboard = () => {
           </button>
         </div>
 
+        {/* Navigation */}
+        <div className="flex justify-center gap-4 mb-10">
+          <Link
+            to="/user/projects"
+            className="text-white bg-indigo-600 hover:bg-indigo-100  px-6 py-2 rounded-md"
+          >
+            Projects
+          </Link>
+
+          <Link
+            to="/user/tasks"
+            className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-md"
+          >
+            Tasks
+          </Link>
+        </div>
+
+        {/* 👇 THIS IS WHERE Projects.jsx RENDERS */}
+        <Outlet />
+
         {/* Logout */}
         <div className="flex justify-center">
           <button
@@ -99,7 +116,6 @@ const StatCard = ({ title, value }) => (
 );
 
 export default UserDashboard;
-
 
 // import { Navigate } from "react-router-dom";
 // import { useAuth } from "../auth/AuthContext";
@@ -127,8 +143,7 @@ export default UserDashboard;
 //     <div className="min-h-screen text-center min-w-screen     bg-gray-100 p-8">
 //       {/* Header */}
 //      {/* <div className="  min-w-screen w-64 bg-white p-4"> */}
-      
-  
+
 //         <div className="mb-8 ">
 //             <h1 className="text-3xl font-bold text-gray-800">
 //             Welcome, {user.name} 👋

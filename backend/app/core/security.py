@@ -31,6 +31,8 @@ def create_access_token(data: dict, expires_delta: timedelta):
     to_encode.update({"exp": expire})
 
     token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    print("ENCODED TOKEN:", token)
+    print("TOKEN LENGTH:", len(token))
     return token
 
 
@@ -41,13 +43,17 @@ def get_current_user(
     print("🔑 Token Received:", token)
 
     try:
+        print("RECEIVED TOKEN:", token)
+        token = token.strip()
+        print("TOKEN LENGTH:", len(token)) 
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        
         print("📦 Payload:", payload)
 
         user_id = payload.get("sub")
 
         if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            raise HTTPException(status_code=401, detail="Iaanvalid token")
 
     except JWTError as e:
         print("❌ JWT ERROR:", e)
