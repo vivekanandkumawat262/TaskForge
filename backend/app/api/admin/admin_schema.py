@@ -16,14 +16,23 @@ class ProjectMini(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class AssignedTaskMini(BaseModel):
+    id: int
+    title: str
+    status: str
+    project: ProjectMini | None
+
+    model_config = {"from_attributes": True}
+
+
 class AdminUserResponse(BaseModel):
     id: int
     name: str
     email: EmailStr
     role: str
-
+    
     projects: list[ProjectMini] = []
-    assigned_tasks: list[TaskMini] = []
+    assigned_tasks: list[AssignedTaskMini] = []
 
     model_config = {"from_attributes": True}
 
@@ -32,3 +41,4 @@ class AdminUserResponse(BaseModel):
 TaskMini.model_rebuild()
 ProjectMini.model_rebuild()
 AdminUserResponse.model_rebuild()
+AssignedTaskMini.model_rebuild()

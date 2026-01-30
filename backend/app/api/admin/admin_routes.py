@@ -6,6 +6,7 @@ from typing import List
 from app.db.session import get_db
 from app.models.user import User
 from app.models.project import Project
+from app.models.task import Task
 from app.core.security import get_current_user
 from app.api.admin.admin_schema import AdminUserResponse
 
@@ -22,7 +23,7 @@ def get_all_users(
         db.query(User)
         .options(
             selectinload(User.projects).selectinload(Project.tasks),
-            selectinload(User.assigned_tasks)
+            selectinload(User.assigned_tasks).selectinload(Task.project)
         )
         .all()
     )

@@ -12,6 +12,9 @@ import Dashboard from "../pages/Dashboard";
 import DashboardA from "../pages/DashboardA";
 import Profile from "../pages/Profile";
 import AdminUsers from "../pages/AdminUsers";
+import MyTasks from "../components/user/MyTasks";
+import CompletedTasks from "../components/user/CompletedTasks";
+import Profile2 from "../components/user/Profile";
 
 const AppRoutes = () => (
   <Routes>
@@ -46,6 +49,9 @@ const AppRoutes = () => (
       <Route path="projects" element={<Projects />} />
       <Route path="projects/:projectId" element={<ProjectDetails />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="tasks" element={<MyTasks />} />
+      <Route path="completed" element={<CompletedTasks />} />
+      {/* <Route path="profile2" element={<Profile2 />} /> */}
 
     </Route>
 

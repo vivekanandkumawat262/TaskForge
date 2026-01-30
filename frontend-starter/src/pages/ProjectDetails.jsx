@@ -6,7 +6,7 @@ import {
   updateTaskStatus,
   updateTask,
   getAllUsers,
-  assignTask
+  assignTask,
 } from "../api/taskApi";
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
@@ -28,41 +28,42 @@ export default function ProjectDetails() {
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
 
+  const [tasksLoading, setTasksLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
   const [search, setSearch] = useState("");
 
   const handleCreateTask = async () => {
     if (!title.trim()) return;
 
     try {
-      setLoading(true);
-      await createTask(projectId, {
-        title,
-        description,
-      });
+      setActionLoading(true);
+      await createTask(projectId, { title, description });
 
-      // reset form
       setTitle("");
       setDescription("");
-      fetchTasks();
-      // later you’ll refresh task list here
-    } catch (err) {
+      fetchTasks(search);
+    } catch {
       setError("Failed to create task");
     } finally {
-      setLoading(false);
+      setActionLoading(false);
     }
   };
 
   const fetchTasks = async (searchValue = "") => {
     try {
-      setLoading(true);
+      setTasksLoading(true);
+      setError(null);
+
       const data = await getTasksByProject(projectId, {
         search: searchValue,
       });
+
       setTasks(data);
     } catch (err) {
       setError("Failed to load tasks");
     } finally {
-      setLoading(false);
+      setTasksLoading(false);
     }
   };
 
@@ -94,9 +95,9 @@ export default function ProjectDetails() {
     }
   };
 
-//   useEffect(() => {
-//     fetchTasks();
-//   }, [projectId]);
+  //   useEffect(() => {
+  //     fetchTasks();
+  //   }, [projectId]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -137,7 +138,7 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     if (user?.role === "admin") {
-      fetchUsers();   // ✅ correct
+      fetchUsers(); // ✅ correct
     }
   }, [user]);
 
@@ -201,10 +202,10 @@ export default function ProjectDetails() {
 
           <button
             onClick={handleCreateTask}
-            disabled={loading || !title.trim()}
+            disabled={actionLoading || !title.trim()}
             className="bg-indigo-600 text-white px-5 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-60 transition"
           >
-            {loading ? "Creating..." : "Create Task"}
+            {actionLoading ? "Creating..." : "Create Task"}
           </button>
         </div>
       </div>
@@ -214,7 +215,7 @@ export default function ProjectDetails() {
 
         {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
-        {loading ? (
+        {tasksLoading ? (
           <p className="text-gray-500 animate-pulse">Loading tasks...</p>
         ) : tasks.length === 0 ? (
           <p className="text-gray-500">

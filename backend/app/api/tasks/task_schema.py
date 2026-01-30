@@ -69,6 +69,16 @@ class AdminUserResponse(BaseModel):
     role: str
 
     projects: list[ProjectWithTasks]= []
-    assigned_tasks: list[TaskMini]= []
+    # assigned_tasks: list[TaskMini]= []
+    assigned_tasks: list[AssignedTaskMini] = []
+
+    model_config = {"from_attributes": True}
+
+
+class AssignedTaskMini(BaseModel):
+    id: int
+    title: str
+    status: str
+    project: Optional["ProjectMini"]
 
     model_config = {"from_attributes": True}

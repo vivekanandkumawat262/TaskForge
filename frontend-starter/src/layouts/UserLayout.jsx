@@ -1,12 +1,12 @@
+// src/pages/user/UserLayout.jsx
 import { Outlet } from "react-router-dom";
+import UserSidebar from "../components/user/UserSidebar";
 
 export default function UserLayout() {
   return (
-    <div className="min-w-screen min-h-screen bg-gray-100">
-      {/* Header / Sidebar */}
-      <header className="bg-white shadow p-4">User Dashboard</header>
-
-      <main className="p-6">
+    <div className="flex bg-gray-50 min-w-screen min-h-screen">
+      <UserSidebar />
+      <main className="flex-1 p-6">
         <Outlet />
       </main>
     </div>

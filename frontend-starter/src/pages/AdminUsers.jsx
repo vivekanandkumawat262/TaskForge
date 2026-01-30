@@ -17,7 +17,7 @@ export default function AdminUsers() {
       setLoading(true);
 
       const res = await api.get("/admin/users");
-      console.log("ADMIN USERS:", res.data);
+      console.log("hello ADMIN USERS:", res.data);
 
       setUsers(res.data || []);
     } catch (err) {
@@ -42,9 +42,7 @@ export default function AdminUsers() {
         ← Back
       </button>
 
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        👥 All Users
-      </h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">👥 All Users</h2>
 
       {/* Error */}
       {error && (
@@ -80,9 +78,7 @@ export default function AdminUsers() {
                     {u.name}
                   </td>
 
-                  <td className="px-4 py-3 text-gray-700">
-                    {u.email}
-                  </td>
+                  <td className="px-4 py-3 text-gray-700">{u.email}</td>
 
                   <td className="px-4 py-3 capitalize">
                     <span
@@ -99,10 +95,8 @@ export default function AdminUsers() {
                   {/* PROJECTS + TASKS */}
                   <td className="px-4 py-3 space-y-3">
                     {/* Projects */}
-                    {!u.projects || u.projects.length === 0 ? (
-                      <p className="text-sm text-gray-400">
-                        No projects
-                      </p>
+                    {u.projects.length === 0 && u.role === "user" ? (
+                      <p className="text-sm text-gray-400">No owned projects</p>
                     ) : (
                       u.projects.map((project) => (
                         <div key={project.id}>
@@ -131,16 +125,69 @@ export default function AdminUsers() {
                     )}
 
                     {/* Assigned Tasks */}
-                    {u.assigned_tasks?.length > 0 && (
-                      <div>
-                        <p className="font-semibold text-sm mt-2 text-gray-800">
-                          🧩 Assigned Tasks
-                        </p>
+                    {/*                    
+                    {u.assigned_tasks.map((task) => (
+                        
+                      <li key={task.id}>
+                        {task.project && (
+                          <p className="font-semibold text-sm text-gray-800">
+                            📁 {task.project.name}
+                          </p>
+                        )}
+
                         <ul className="ml-5 list-disc text-sm text-gray-700">
                           {u.assigned_tasks.map((task) => (
-                            <li key={task.id}>{task.title}</li>
+                            <li key={task.id}>
+                              {task.title}{" "}
+                              <span className="ml-2 text-xs text-gray-400">
+                                [{task.status}]
+                              </span>
+                            </li>
                           ))}
                         </ul>
+                      </li>
+                    ))} */}
+                    {/* Assigned Tasks */}
+                    {u.assigned_tasks && u.assigned_tasks.length > 0 && (
+                      <div>
+                        <p className="font-semibold text-sm text-gray-800 mb-2">
+                          🧩 Assigned Tasks
+                        </p>
+                        {/* group by project id   */}
+                        {Object.values(
+                          u.assigned_tasks.reduce((acc, task) => {
+                            const projectId = task.project?.id || "no-project";
+                            const projectName =
+                              task.project?.name || "No Project";
+
+                            if (!acc[projectId]) {
+                              acc[projectId] = {
+                                projectName,
+                                tasks: [],
+                              };
+                            }
+
+                            acc[projectId].tasks.push(task);
+                            return acc;
+                          }, {}),
+                        ).map((group, idx) => (
+                          <div key={idx}>
+                            <p className="font-semibold text-sm text-gray-800">
+                              📁 {group.projectName}
+                            </p>
+
+                            <ul className="ml-5 list-disc text-sm text-gray-700">
+                              {group.tasks.map((task) => (
+                                <li key={task.id}>
+                                  {task.title}
+                                  <span className="ml-2 text-xs text-gray-400">
+                                    [{task.status}]
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </td>
@@ -153,7 +200,6 @@ export default function AdminUsers() {
     </div>
   );
 }
-
 
 // import { useEffect, useState } from "react";
 // import api from "../api/apiClient";

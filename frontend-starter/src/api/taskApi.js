@@ -95,6 +95,7 @@ export const assignTask = async (taskId, userId) => {
   const res = await api.patch(`/tasks/${taskId}/assign`, {
     user_id: userId,
   });
+  console.log(res.data)
   return res.data;
 };
 /**

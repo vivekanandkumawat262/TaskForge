@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.models.task import Task
 from app.models.user import User
 from app.models.project import Project
+from app.models.activity_log import ActivityLog
 from app.api.tasks.task_schema import TaskCreate, TaskResponse, TaskUpdate,TaskStatusUpdate, TaskAssign,AdminUserResponse
 from app.core.security import get_current_user
 
@@ -257,14 +258,14 @@ def assign_task_to_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # 🔐 Admin-only access
+    # 🔐 Admin-only
     if current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Only admin can assign tasks"
         )
 
-    # 🔍 Find task
+    # 🔍 Task
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(
@@ -272,8 +273,21 @@ def assign_task_to_user(
             detail="Task not found"
         )
 
-    # 🔍 Find user to assign
-    print(data)
+    # ❌ Block completed task
+    if task.status == "completed":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot assign a completed task"
+        )
+
+    # ❌ Block orphan task
+    if not task.project_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Task has no project"
+        )
+
+    # 🔍 User
     user = db.query(User).filter(User.id == data.user_id).first()
     if not user:
         raise HTTPException(
@@ -281,11 +295,27 @@ def assign_task_to_user(
             detail="User not found"
         )
 
-    # ✅ Assign task
+    # 🔁 No-op reassign
+    if task.assigned_to_id == user.id:
+        return {
+            "message": "Task already assigned to this user",
+            "task_id": task.id
+        }
+
+    # ✅ Assign
     task.assigned_to_id = user.id
+
+    # 🧾 Log
+    db.add(ActivityLog(
+        action="assign_task",
+        resource="task",
+        resource_id=task.id,
+        user_id=current_user.id
+    ))
 
     db.commit()
     db.refresh(task)
+    
 
     return {
         "message": "Task assigned successfully",
@@ -294,6 +324,10 @@ def assign_task_to_user(
             "id": user.id,
             "name": user.name,
             "email": user.email
+        },
+        "project": {
+            "id": task.project.id,
+            "name": task.project.name
         }
     }
 

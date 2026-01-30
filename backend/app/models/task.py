@@ -15,10 +15,10 @@ class Task(Base):
     priority = Column(String, default="medium")
     due_date = Column(Date)
 
-    project_id = Column(Integer, ForeignKey("projects.id"))
+    project_id = Column(Integer, ForeignKey("projects.id", ondelete="CASCADE"))
 
     assigned_to_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    created_by_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_by_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
     project = relationship("Project", back_populates="tasks")
 
@@ -27,7 +27,7 @@ class Task(Base):
         foreign_keys=[assigned_to_id],
         back_populates="assigned_tasks"
     )
-
+   
     created_by = relationship(
         "User",
         foreign_keys=[created_by_id],
