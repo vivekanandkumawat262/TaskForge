@@ -214,5 +214,5 @@ Created automatically on backend startup:
 - Team collaboration features
 
 ## 👨‍💻 Author
-Vivekanand Kumawat
+Vivekanand Kumawat |
 Full Stack Developer | FastAPI | React | System Design
