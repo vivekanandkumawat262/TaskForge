@@ -7,7 +7,19 @@ import api, { setAuthToken } from "./apiClient";
  */
 export const registerUser = async (userData) => {
   try {
+    console.log(userData);
     const res = await api.post("/auth/register", userData);
+    console.log("after register",res.data);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+export const registerasUser = async (userData) => {
+  try {
+    console.log("before register",userData);
+    const res = await api.post("/auth/user/register", userData);
+    console.log("after register",res.data);
     return res.data;
   } catch (err) {
     throw err;

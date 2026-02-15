@@ -23,7 +23,7 @@ const Navbar = () => {
       {/* ================= Navigation ================= */}
       <div className="flex items-center gap-6">
         <Link
-          to="/user/userDashboard"
+          to="/"
           className="text-sm font-medium text-gray-300 hover:text-white transition"
         >
           Home

@@ -18,3 +18,12 @@ class ProjectResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class TechnicianResponse(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    role: str
+
+    class Config:
+        from_attributes = True

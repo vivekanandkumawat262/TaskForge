@@ -17,6 +17,18 @@ export const getProjects = async (params = {}) => {
     throw err;
   }
 };
+export const getTechnicians = async (params = {}) => {
+  try {
+    const res = await api.get("/admin/users", { params });
+
+    console.log("Technicians:", res.data);
+
+    return res.data;
+  } catch (err) {
+    console.error("Get technicians error:", err);
+    throw err;
+  }
+};
 
 /**
  * Get a single project by ID

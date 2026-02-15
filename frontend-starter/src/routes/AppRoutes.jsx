@@ -15,6 +15,8 @@ import AdminUsers from "../pages/AdminUsers";
 import MyTasks from "../components/user/MyTasks";
 import CompletedTasks from "../components/user/CompletedTasks";
 import Profile2 from "../components/user/Profile";
+import TechnicianDashboard from "../pages/TechnicianDashboard"
+import RegisterTechnician from "../pages/RegisterTechnician"
 
 const AppRoutes = () => (
   <Routes>
@@ -68,6 +70,8 @@ const AppRoutes = () => (
         <Route path="projects" element={<Projects />} />
         <Route path="projects/:projectId" element={<ProjectDetails />} />
         <Route path="users" element={<AdminUsers />} />
+        <Route path="technicians" element={<TechnicianDashboard />} />
+        <Route path="register" element={<RegisterTechnician/>} />
     </Route>
   </Routes>
 );

@@ -18,7 +18,9 @@ from app.api.auth.auth_schema import (
     UserRegister,
     UserLogin,
     TokenResponse,
-    UserResponse
+    UserResponse,
+    UserasResponse,
+    UserAsUserRegister
 )
 
 router = APIRouter()
@@ -36,9 +38,39 @@ def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
     user = User(
         name=user_data.name,
         email=user_data.email,
-        password=get_password_hash(user_data.password)
+        password=get_password_hash(user_data.password),
+        role=user_data.role,
+        # role="techniciannnnn",
+         
     )
+    print(user)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
 
+    return user
+
+
+
+@router.post("/user/register", response_model=UserasResponse)
+def register_userasuser(user_data: UserAsUserRegister, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    user = User(
+        name=user_data.name,
+        email=user_data.email,
+        password=get_password_hash(user_data.password),
+        
+        # role="techniciannnnn",
+         
+    )
+    print(user)
     db.add(user)
     db.commit()
     db.refresh(user)

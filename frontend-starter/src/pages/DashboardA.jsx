@@ -89,7 +89,7 @@ export default function DashboardA() {
           Welcome, {user?.name || "User"} 👋
         </h1>
         <p className="text-gray-600 mt-1">
-          Manage your projects and tasks from here
+          Manage your projects and tasks from heres
         </p>
       </div>
 
@@ -118,6 +118,12 @@ export default function DashboardA() {
           description="Users "
           buttonText="View Users"
           onClick={() => navigate("/admin/users")}
+        />
+        <ActionCard
+          title="Create Technicians"
+          description="Technician "
+          buttonText="View Technician"
+          onClick={() => navigate("/admin/technicians")}
         />
 
         {tasks.map((task) => (

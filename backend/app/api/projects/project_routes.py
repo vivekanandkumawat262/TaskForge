@@ -6,7 +6,7 @@ from typing import List, Optional
 from app.db.session import get_db
 from app.models.project import Project
 from app.models.user import User
-from app.api.projects.project_schema import ProjectCreate, ProjectResponse, ProjectUpdate
+from app.api.projects.project_schema import ProjectCreate, ProjectResponse, TechnicianResponse, ProjectUpdate
 from app.core.security import get_current_user
 
 router = APIRouter()
@@ -56,6 +56,23 @@ def get_projects(
         )
 
     return query.order_by(Project.id.desc()).all()
+
+
+@router.get("/technicians", response_model=List[TechnicianResponse])
+def get_technicians(
+    search: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    query = db.query(User).filter(User.role == "technician")
+
+    if search:
+        query = query.filter(
+            User.name.ilike(f"%{search}%")
+        )
+
+    return query.order_by(User.id.desc()).all()
 
 # @router.get("/", response_model=List[ProjectResponse])
 # def get_projects(
